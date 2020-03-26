@@ -3,13 +3,11 @@ export const transformCountriesToMapData = countryData => {
     type: "FeatureCollection",
 
     features: countryData.map(country => {
+      const count = +country.cases.replace(",", "")
       return {
         type: "Feature",
         properties: {
-          ...country,
-          cases: Math.sqrt(+country.cases.replace(",", "")),
-          casesNumber: +country.cases.replace(",", ""),
-          casesStr: country.cases.replace(",", "")
+          count
         },
         geometry: {
           type: "Point",

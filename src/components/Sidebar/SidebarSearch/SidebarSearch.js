@@ -1,5 +1,6 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField, InputAdornment } from "@material-ui/core";
+import SearchRounded from "@material-ui/icons/SearchRounded";
 
 const SidebarSearch = ({ search, setSearch }) => {
   return (
@@ -8,6 +9,13 @@ const SidebarSearch = ({ search, setSearch }) => {
       variant="outlined"
       value={search}
       onChange={event => setSearch(event.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchRounded />
+          </InputAdornment>
+        )
+      }}
     />
   );
 };

@@ -11,12 +11,12 @@ export const clusterLayer = {
       0,
       0,
       5,
-      ["/", ["get", "cases"], 2]
+      ["sqrt", ["/", ["get", "count"], 2]]
     ],
     "circle-color": [
       "interpolate",
       ["linear"],
-      ["get", "casesNumber"],
+      ["get", "count"],
       0,
       "#00cc00",
       40000,
@@ -33,7 +33,7 @@ export const clusterCountLayer = {
   type: "symbol",
   source: "geojson",
   layout: {
-    "text-field": ["get", "casesStr"],
+    "text-field": ["to-string", ["get", "count"]],
     "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
     "text-size": 20
   },

@@ -1,4 +1,4 @@
-import { Avatar, Grid, ListItem, Typography } from "@material-ui/core";
+import { Avatar, Grid, ListItem, ListItemText } from "@material-ui/core";
 import React from "react";
 import Autosizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
@@ -44,13 +44,11 @@ const SidebarListItemRenderer = ({ index, data, style }) => {
             </Avatar>
           </Grid>
           <Grid item>
-            <Typography variant="body2">{country.country_name}</Typography>
+            <ListItemText primary={country.country_name} />
           </Grid>
         </Grid>
         <Grid item>
-          <Typography variant="subtitle2" color="textPrimary">
-            {country.cases}
-          </Typography>
+          <ListItemText secondary={country.cases} />
         </Grid>
       </Grid>
     </ListItem>

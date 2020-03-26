@@ -1,4 +1,4 @@
-import { CssBaseline, Drawer, Hidden, Grid } from "@material-ui/core";
+import { CssBaseline, Drawer, Hidden } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
 import React, { useState } from "react";
 import Moment from "react-moment";
-import Spinner from "../../components/Spinner/Spinner";
 
 const drawerWidth = 240;
 
@@ -49,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Layout = props => {
-  const { lastUpdated, leftSideBar, children } = props;
+  const { leftSideBar, children } = props;
   const classes = useStyles();
   const theme = useTheme();
 
@@ -76,13 +75,6 @@ const Layout = props => {
           <Typography variant="h6" className={classes.title}>
             Covid 19 - World monitoring
           </Typography>
-          {lastUpdated ? (
-            <div>
-              <Typography variant="overline">
-                <Moment fromNow>{lastUpdated}</Moment>
-              </Typography>
-            </div>
-          ) : null}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
