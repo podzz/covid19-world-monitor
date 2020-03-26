@@ -65,7 +65,7 @@ function App() {
     ></Sidebar>
   );
   return (
-    <HashRouter basename="/">
+    <HashRouter basename={process.env.PUBLIC_URL}>
       <ThemeProvider theme={theme}>
         <div className="App">
           <Layout leftSideBar={leftSideBar} lastUpdated={getLastUpdate}>
