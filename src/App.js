@@ -8,6 +8,7 @@ import Layout from "./containers/Layout/Layout";
 import { convertApiDateToDate, transformCountries } from "./utils/helper";
 import { transformCountriesToMapData } from "./utils/map-helper";
 import Spinner from "./components/Spinner/Spinner";
+import { HashRouter } from "react-router-dom";
 function App() {
   const theme = useMemo(
     () =>
@@ -64,20 +65,22 @@ function App() {
     ></Sidebar>
   );
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <Layout leftSideBar={leftSideBar} lastUpdated={getLastUpdate}>
-          {Object.keys(getMapData).length > 0 ? (
-            <Map
-              mapData={getMapData}
-              longitude={getCoordinates.longitude}
-              latitude={getCoordinates.latitude}
-            ></Map>
-          ) : null}
-        </Layout>
-        {loading ? <Spinner /> : null}
-      </div>
-    </ThemeProvider>
+    <HashRouter basename="/">
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <Layout leftSideBar={leftSideBar} lastUpdated={getLastUpdate}>
+            {Object.keys(getMapData).length > 0 ? (
+              <Map
+                mapData={getMapData}
+                longitude={getCoordinates.longitude}
+                latitude={getCoordinates.latitude}
+              ></Map>
+            ) : null}
+          </Layout>
+          {loading ? <Spinner /> : null}
+        </div>
+      </ThemeProvider>
+    </HashRouter>
   );
 }
 
