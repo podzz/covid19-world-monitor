@@ -1,0 +1,7 @@
+.Cursor {
+    height: 100%;
+}
+
+.Cursor>* {
+    cursor: url('../../assets/covid.png') 24 24, auto !important;
+}
