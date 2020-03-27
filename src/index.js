@@ -1,12 +1,40 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import { applyMiddleware, combineReducers, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension/logOnlyInProduction";
+import createSagaMiddleware from "redux-saga";
+import thunk from "redux-thunk";
 import App from "./App";
+import "./index.css";
 import * as serviceWorker from "./serviceWorker";
+import { Provider } from "react-redux";
+import { watchMapCases, watchCountryTimeseries } from "./redux/sagas";
+import { mapCasesReducer } from "./redux/reducers/mapCases.reducer";
+import { countryTimeseriesReducer } from "./redux/reducers/countryTimeseries.reducer";
+
+const sagaMiddleware = createSagaMiddleware();
+const middlewares = applyMiddleware(thunk, sagaMiddleware);
+const enhancers =
+  process.env.NODE_ENV === "development"
+    ? composeWithDevTools({})(middlewares)
+    : middlewares;
+
+const store = createStore(
+  combineReducers({
+    mapCases: mapCasesReducer,
+    countryTimeseries: countryTimeseriesReducer
+  }),
+  enhancers
+);
+
+sagaMiddleware.run(watchMapCases);
+sagaMiddleware.run(watchCountryTimeseries);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -3,10 +3,11 @@ export const transformCountriesToMapData = countryData => {
     type: "FeatureCollection",
 
     features: countryData.map(country => {
-      const count = +country.cases.replace(",", "")
+      const count = +country.cases.replace(",", "");
       return {
         type: "Feature",
         properties: {
+          ...country,
           count
         },
         geometry: {
@@ -16,4 +17,14 @@ export const transformCountriesToMapData = countryData => {
       };
     })
   };
+};
+
+export const retrieveFeatureFromEvent = event => {
+  const {
+    features,
+    srcEvent: { offsetX, offsetY }
+  } = event;
+  const hoveredFeature =
+    features && features.find(f => f.layer.id === "clusters");
+  return { hoveredFeature, x: offsetX, y: offsetY };
 };

@@ -122,3 +122,14 @@ export const filterCountries = (countries, search) => {
     );
   });
 };
+
+export const retrieveTimeseriesKeyForCountry = (
+  timeseriesCountries,
+  country
+) => {
+  let foundCountry = timeseriesCountries.find(
+    timeserieCountry => timeserieCountry === country.country_name
+  );
+
+  return foundCountry;
+};

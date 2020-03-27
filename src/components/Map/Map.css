@@ -1,7 +1,24 @@
-.Cursor {
+.Map {
     height: 100%;
 }
 
-.Cursor>* {
+.Map>* {
     cursor: url('../../assets/covid.png') 24 24, auto !important;
+}
+
+.tooltip {
+    position: absolute;
+    margin: 8px;
+    padding: 4px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    max-width: 300px;
+    font-size: 15px;
+    z-index: 9;
+    pointer-events: none;
+}
+
+
+.tooltip-click {
+    color: red;
 }

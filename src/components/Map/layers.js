@@ -1,35 +1,24 @@
 export const clusterLayer = {
   id: "clusters",
-  type: "circle",
-  beforeId: "cluster-count",
+  type: "fill",
+  beforeId: "countryText",
   source: "geojson",
   paint: {
-    "circle-radius": [
-      "interpolate",
-      ["linear"],
-      ["zoom"],
-      0,
-      0,
-      5,
-      ["sqrt", ["/", ["get", "count"], 2]]
-    ],
-    "circle-color": [
+    "fill-opacity": 1,
+    "fill-color": [
       "interpolate",
       ["linear"],
       ["get", "count"],
-      0,
-      "#00cc00",
+      10000,
+      "rgba(0, 204, 0, 0.1)",
       40000,
-      "#e60000"
-    ],
-    "circle-opacity": 0.6,
-    "circle-stroke-width": 1,
-    "circle-stroke-color": "#fff"
+      "rgba(230, 0, 0, 0.6)"
+    ]
   }
 };
 
 export const clusterCountLayer = {
-  id: "cluster-count",
+  id: "countryText",
   type: "symbol",
   source: "geojson",
   layout: {
@@ -39,17 +28,5 @@ export const clusterCountLayer = {
   },
   paint: {
     "text-color": "#fff"
-  }
-};
-
-export const unclusteredPointLayer = {
-  id: "unclustered-point",
-  type: "circle",
-  source: "geojson",
-  paint: {
-    "circle-color": "#11b4da",
-    "circle-radius": 4,
-    "circle-stroke-width": 1,
-    "circle-stroke-color": "#fff"
   }
 };
