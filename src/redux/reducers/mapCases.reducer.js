@@ -1,4 +1,5 @@
 import { MapCasesActions } from "../actions/mapCases.actions";
+import { orderBy } from "lodash";
 
 const initialState = {
   countries: [],
@@ -20,7 +21,11 @@ export function mapCasesReducer(state = initialState, action) {
         ...state,
         loading: false,
         error: null,
-        countries: action.countries,
+        countries: orderBy(
+          action.countries,
+          country => +country.cases.replace(",", ""),
+          ["desc"]
+        ),
         lastUpdate: action.lastUpdate
       };
     case MapCasesActions.GET_MAP_CASES_FAILURE:

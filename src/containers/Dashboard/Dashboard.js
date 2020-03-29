@@ -1,16 +1,15 @@
+import { keyBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import Layout from "../Layout/Layout";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { getMapCases } from "../../redux/actions/mapCases.actions";
+import { default as countriesPolygon } from "../../assets/all-countries.json";
 import Map from "../../components/Map/Map";
 import SelectedCountryDialog from "../../components/SelectedCountryDialog/SelectedCountryDialog";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import Spinner from "../../components/Spinner/Spinner";
-import { transformCountriesToMapData } from "../../utils/map-helper";
 import { getCountryTimeseriesMapCases } from "../../redux/actions/countryTimeseries.actions";
-import { retrieveTimeseriesKeyForCountry } from "../../utils/helper";
-import { default as countriesPolygon } from "../../assets/countries.json";
-import { keyBy } from "lodash";
+import { getMapCases } from "../../redux/actions/mapCases.actions";
+import { transformCountriesToMapData } from "../../utils/map-helper";
+import Layout from "../Layout/Layout";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -25,9 +24,6 @@ const Dashboard = () => {
   const countries = useSelector(state => state.mapCases.countries);
   const lastUpdated = useSelector(state => state.mapCases.lastUpdate);
   const loading = useSelector(state => state.mapCases.loading);
-  const timeseriesCountries = useSelector(
-    state => state.countryTimeseries.countries
-  );
   const timeseriesCountriesMap = useSelector(
     state => state.countryTimeseries.timeseriesByCountry
   );
@@ -49,11 +45,11 @@ const Dashboard = () => {
       const countryByAlpha3 = keyBy(countries, "code.alpha3");
       countriesPolygon.features = countriesPolygon.features.reduce(
         (result, feature) => {
-          if (countryByAlpha3[feature.properties.ISO_A3]) {
+          if (countryByAlpha3[feature.properties.A3]) {
             const newProperties = {
               ...feature.properties,
-              ...countryByAlpha3[feature.properties.ISO_A3],
-              count: +countryByAlpha3[feature.properties.ISO_A3].cases.replace(
+              ...countryByAlpha3[feature.properties.A3],
+              count: +countryByAlpha3[feature.properties.A3].cases.replace(
                 ",",
                 ""
               )
@@ -74,11 +70,7 @@ const Dashboard = () => {
 
   const onSelectCountry = useCallback(
     countrySelected => {
-      const foundKey = retrieveTimeseriesKeyForCountry(
-        timeseriesCountries,
-        countrySelected
-      );
-      const timeseries = timeseriesCountriesMap[foundKey];
+      const timeseries = timeseriesCountriesMap[countrySelected.A3];
       if (timeseries) {
         setSelectedCountry({
           country: {
@@ -89,7 +81,7 @@ const Dashboard = () => {
         });
       }
     },
-    [setSelectedCountry, timeseriesCountries, timeseriesCountriesMap]
+    [setSelectedCountry, timeseriesCountriesMap]
   );
 
   return (

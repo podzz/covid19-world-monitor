@@ -11,6 +11,26 @@ export const convertApiDateToDate = apiDate => {
 
 export const transformCountryName = countryName => {
   switch (countryName) {
+    case "Korea, South":
+      return "Korea, Republic Of";
+    case "Holy See":
+      return "Vatican City State";
+    case "Congo (Brazzaville)":
+      return "Republic Of Congo";
+    case "Congo (Kinshasa)":
+      return "Democratic Republic Of Congo";
+    case "Saint Vincent and the Grenadines":
+      return "Saint Vincent And The Grenadines";
+    case "Saint Kitts and Nevis":
+      return "Saint Kitts And Nevis";
+    case "Taiwan*":
+      return "Taiwan";
+    case "Guinea-Bissau":
+      return "Guinea-bissau";
+    case "US":
+      return "United States";
+    case "Cote d'Ivoire":
+      return "Côte d'Ivoire";
     case "UK":
       return "United Kingdom";
     case "USA":
@@ -59,7 +79,6 @@ export const transformCountryName = countryName => {
       return "Timor-Leste, Democratic Republic of";
     case "St. Barth":
       return "Saint Barthélemy";
-
     case "North Macedonia":
       return "Macedonia, The Former Yugoslav Republic Of";
     case "DRC":
@@ -121,15 +140,4 @@ export const filterCountries = (countries, search) => {
       alpha3.includes(searchLower)
     );
   });
-};
-
-export const retrieveTimeseriesKeyForCountry = (
-  timeseriesCountries,
-  country
-) => {
-  let foundCountry = timeseriesCountries.find(
-    timeserieCountry => timeserieCountry === country.country_name
-  );
-
-  return foundCountry;
 };

@@ -20,7 +20,6 @@ export function countryTimeseriesReducer(state = initialState, action) {
         ...state,
         loading: false,
         error: null,
-        countries: Object.keys(action.data),
         timeseriesByCountry: action.data
       };
     case CountryTimeseriesActions.GET_COUNTRY_TIMESERIES_FAILURE:
