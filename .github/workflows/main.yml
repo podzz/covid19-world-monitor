@@ -13,7 +13,7 @@ jobs:
       - name: Build and Deploy
         uses: JamesIves/github-pages-deploy-action@master
         env:
-          PUBLIC_URL: /covid-19-monitor-test
+          PUBLIC_URL: /covid19-world-monitor
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REACT_APP_MapboxAccessToken: ${{ secrets.REACT_APP_MapboxAccessToken }}
           REACT_APP_CovidAPI_Key: ${{ secrets.REACT_APP_CovidAPI_Key }}
