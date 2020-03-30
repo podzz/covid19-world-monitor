@@ -13,24 +13,54 @@ import {
   Bar
 } from "recharts";
 
-const CustomAreaChart = ({ timeseries }) => {
+const CustomAreaChart = ({ dates }) => {
+  const [getInitialChart, setInitialChart] = useState([]);
   const [getDifferential, setDifferential] = useState([]);
+
   useEffect(() => {
-    const differential = timeseries.map((timeserie, i) => {
+    const parsedDates = JSON.parse(dates);
+    // console.log(dates);
+    setInitialChart(
+      Object.keys(parsedDates).reduce((result, key) => {
+        result.push({
+          date: key,
+          ...parsedDates[key]
+        });
+
+        return result;
+      }, [])
+    );
+  }, [dates, setInitialChart]);
+
+  useEffect(() => {
+    console.log(getInitialChart);
+    const differential = getInitialChart.map((dateData, i) => {
+      if (i === 0) {
+        return dateData;
+      }
+      let cases = (dateData.cases || 0) - getInitialChart[i - 1].cases || 0;
+      let deaths = (dateData.deaths || 0) - getInitialChart[i - 1].deaths || 0;
+      if (cases < 0) {
+        cases = 0;
+      }
+      if (deaths < 0) {
+        deaths = 0;
+      }
       return i === 0
-        ? timeserie
+        ? dateData
         : {
-            ...timeserie,
-            confirmed: timeserie.confirmed - timeseries[i - 1].confirmed,
-            death: timeserie.death - timeseries[i - 1].death
+            ...dateData,
+            cases,
+            deaths
           };
     });
+    console.log(differential);
     setDifferential(differential);
-  }, [timeseries]);
+  }, [getInitialChart, setDifferential]);
   return (
     <React.Fragment>
       <ResponsiveContainer width="100%" height="50%">
-        <AreaChart data={timeseries}>
+        <AreaChart data={getInitialChart}>
           <defs>
             <linearGradient id="colorConfirmed" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
@@ -47,14 +77,14 @@ const CustomAreaChart = ({ timeseries }) => {
           <Tooltip />
           <Area
             type="monotone"
-            dataKey="confirmed"
+            dataKey="cases"
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorConfirmed)"
           />
           <Area
             type="monotone"
-            dataKey="death"
+            dataKey="deaths"
             stroke="#b10e03"
             fillOpacity={1}
             fill="url(#colorDeath)"
@@ -63,10 +93,10 @@ const CustomAreaChart = ({ timeseries }) => {
           <Line
             name="Confirmed"
             type="monotone"
-            dataKey="confirmed"
+            dataKey="cases"
             stroke="#8884d8"
           />
-          <Line name="Dead" type="monotone" dataKey="death" stroke="#b10e03" />
+          <Line name="Dead" type="monotone" dataKey="deaths" stroke="#b10e03" />
         </AreaChart>
       </ResponsiveContainer>
       <ResponsiveContainer width="100%" height="50%">
@@ -77,8 +107,8 @@ const CustomAreaChart = ({ timeseries }) => {
           <Tooltip />
 
           <Legend verticalAlign="top" height={36} />
-          <Bar dataKey="confirmed" stackId="a" fill="green" />
-          <Bar dataKey="death" stackId="a" fill="red" />
+          <Bar dataKey="cases" stackId="a" fill="green" />
+          <Bar dataKey="deaths" stackId="a" fill="red" />
         </BarChart>
       </ResponsiveContainer>
     </React.Fragment>

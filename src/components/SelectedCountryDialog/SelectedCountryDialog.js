@@ -22,10 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SelectedCountryDialog = ({
-  selectedCountry: { country, timeseries },
-  discardSelectedCountry
-}) => {
+const SelectedCountryDialog = ({ selectedCountry, discardSelectedCountry }) => {
   const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
@@ -33,14 +30,14 @@ const SelectedCountryDialog = ({
 
   let dialogContent = <React.Fragment></React.Fragment>;
 
-  if (country) {
+  if (selectedCountry) {
     dialogContent = (
       <React.Fragment>
         <AppBar className={classes.appBar}>
           <Toolbar>
-            <Avatar>{country.code.emoji}</Avatar>
+            <Avatar>{selectedCountry.emoji}</Avatar>
             <Typography variant="h6" className={classes.title}>
-              {country.code.name} evolution chart
+              {selectedCountry.name} evolution chart
             </Typography>
             <IconButton
               edge="start"
@@ -52,14 +49,14 @@ const SelectedCountryDialog = ({
             </IconButton>
           </Toolbar>
         </AppBar>
-        <CustomAreaChart timeseries={timeseries} />
+        <CustomAreaChart dates={selectedCountry.dates} />
       </React.Fragment>
     );
   }
   return (
     <Dialog
       fullScreen
-      open={!!country}
+      open={!!selectedCountry}
       onClose={discardSelectedCountry}
       TransitionComponent={Transition}
     >

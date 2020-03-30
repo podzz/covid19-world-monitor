@@ -1,25 +1,49 @@
 import { put } from "redux-saga/effects";
-import { transformCountries } from "../../utils/helper";
 import {
   getMapCasesFailure,
   getMapCasesSuccess
 } from "../actions/mapCases.actions";
+import { last, keys, sortBy } from "lodash";
+import { countries } from "country-data";
 
 export function* getMapCasesSaga() {
   try {
     const response = yield fetch(
-      "https://coronavirus-monitor.p.rapidapi.com/coronavirus/cases_by_country.php",
-      {
-        headers: {
-          "x-rapidapi-host": process.env.REACT_APP_CovidApi_Host,
-          "x-rapidapi-key": process.env.REACT_APP_CovidAPI_Key,
-          "Content-Type": "application/json"
-        }
-      }
+      "https://coronadatascraper.com/timeseries-byLocation.json"
     );
-    const { statistic_taken_at, countries_stat } = yield response.json();
-    const countries = yield transformCountries(countries_stat);
-    yield put(getMapCasesSuccess(countries, statistic_taken_at));
+    const data = yield response.json();
+
+    const result = yield Object.keys(data).reduce((result, key) => {
+      let { coordinates, dates, country } = data[key];
+      if (!key.includes(",") && countries[country]) {
+        const { name, emoji } = countries[country];
+        const { cases, deaths, tested, growthFactor } = dates[
+          last(
+            sortBy(keys(dates), dateObj => {
+              return new Date(dateObj);
+            })
+          )
+        ];
+
+        if (key === "USA") {
+          coordinates = [-101.924137, 41.4831411];
+        }
+
+        result[key] = {
+          ...data[key],
+          name,
+          emoji,
+          lastCases: cases || 0,
+          lastDeaths: deaths || 0,
+          lastTested: tested || 0,
+          lastGrowthFactor: growthFactor || 0,
+          coordinates
+        };
+      }
+      return result;
+    }, {});
+
+    yield put(getMapCasesSuccess(result));
   } catch (error) {
     yield put(getMapCasesFailure(error.message));
   }

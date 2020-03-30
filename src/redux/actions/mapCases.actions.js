@@ -8,10 +8,9 @@ export const getMapCases = () => ({
   type: MapCasesActions.GET_MAP_CASES
 });
 
-export const getMapCasesSuccess = (countries, lastUpdate) => ({
+export const getMapCasesSuccess = countries => ({
   type: MapCasesActions.GET_MAP_CASES_SUCCESS,
-  countries,
-  lastUpdate
+  countries
 });
 
 export const getMapCasesFailure = error => ({

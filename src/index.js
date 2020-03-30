@@ -1,16 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension/logOnlyInProduction";
 import createSagaMiddleware from "redux-saga";
 import thunk from "redux-thunk";
 import App from "./App";
 import "./index.css";
-import * as serviceWorker from "./serviceWorker";
-import { Provider } from "react-redux";
-import { watchMapCases, watchCountryTimeseries } from "./redux/sagas";
 import { mapCasesReducer } from "./redux/reducers/mapCases.reducer";
-import { countryTimeseriesReducer } from "./redux/reducers/countryTimeseries.reducer";
+import { watchMapCases } from "./redux/sagas";
+import * as serviceWorker from "./serviceWorker";
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = applyMiddleware(thunk, sagaMiddleware);
@@ -21,14 +20,12 @@ const enhancers =
 
 const store = createStore(
   combineReducers({
-    mapCases: mapCasesReducer,
-    countryTimeseries: countryTimeseriesReducer
+    mapCases: mapCasesReducer
   }),
   enhancers
 );
 
 sagaMiddleware.run(watchMapCases);
-sagaMiddleware.run(watchCountryTimeseries);
 
 ReactDOM.render(
   <React.StrictMode>

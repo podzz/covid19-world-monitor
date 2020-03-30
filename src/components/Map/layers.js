@@ -1,14 +1,14 @@
 export const clusterLayer = {
   id: "clusters",
   type: "fill",
-  beforeId: "countryText",
+  // beforeId: "countryText",
   source: "geojson",
   paint: {
     "fill-opacity": 1,
     "fill-color": [
       "interpolate",
       ["linear"],
-      ["get", "count"],
+      ["get", "lastCases"],
       10000,
       "rgba(0, 204, 0, 0.1)",
       40000,

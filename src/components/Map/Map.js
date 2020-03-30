@@ -1,17 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import ReactMapGL, { Layer, Source, FlyToInterpolator } from "react-map-gl";
-import { clusterCountLayer, clusterLayer } from "./layers";
-import "./Map.css";
 import { Paper } from "@material-ui/core";
-import { retrieveFeatureFromEvent } from "../../utils/map-helper";
+import { first } from "lodash";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import ReactMapGL, { FlyToInterpolator, Layer, Source } from "react-map-gl";
+import { clusterLayer } from "./layers";
+import "./Map.css";
 
-const Map = ({
-  mapData,
-  mapDataText,
-  longitude,
-  latitude,
-  countrySelected
-}) => {
+const Map = ({ mapData, longitude, latitude, countrySelected }) => {
   const [viewport, setViewport] = useState({
     latitude: 46.2276,
     longitude: 2.2137,
@@ -60,14 +54,19 @@ const Map = ({
 
   const onHover = useCallback(
     event => {
-      setTooltip(retrieveFeatureFromEvent(event));
+      const {
+        features,
+        srcEvent: { offsetX, offsetY }
+      } = event;
+      setTooltip({ hoveredFeature: first(features), x: offsetX, y: offsetY });
     },
     [setTooltip]
   );
 
   const onClick = useCallback(
     event => {
-      const { hoveredFeature } = retrieveFeatureFromEvent(event);
+      const { features } = event;
+      const hoveredFeature = first(features);
       if (hoveredFeature) {
         const { properties } = hoveredFeature;
         countrySelected(properties);
@@ -83,19 +82,18 @@ const Map = ({
       hoveredFeature && (
         <Paper className="tooltip" style={{ left: x, top: y }}>
           <div>
-            <b>Country</b>: {hoveredFeature.properties.country_name}
+            <b>Country</b>: {hoveredFeature.properties.name}
           </div>
           <div>
-            <b>Cases:</b> {hoveredFeature.properties.cases}
+            <b>Cases:</b> {hoveredFeature.properties.lastCases}
           </div>
           <div>
-            <b>Deaths:</b> {hoveredFeature.properties.deaths}
+            <b>Deaths:</b> {hoveredFeature.properties.lastDeaths}
           </div>
+
           <div>
-            <b>Total recovered:</b> {hoveredFeature.properties.total_recovered}
-          </div>
-          <div>
-            <b>Active cases:</b> {hoveredFeature.properties.active_cases}
+            <b>Growth factor:</b>{" "}
+            {(hoveredFeature.properties.lastGrowthFactor * 100).toFixed(0)} %
           </div>
           <div className="tooltip-click">
             <b>
@@ -121,14 +119,6 @@ const Map = ({
         onHover={onHover}
         onClick={onClick}
       >
-        <Source
-          id="countryText"
-          type="geojson"
-          data={mapDataText}
-          ref={_sourceRef}
-        >
-          <Layer {...clusterCountLayer} />
-        </Source>
         <Source type="geojson" data={mapData} ref={_sourceRef}>
           <Layer {...clusterLayer} />
         </Source>

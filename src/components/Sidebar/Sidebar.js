@@ -1,8 +1,6 @@
-import { Container, Divider, Typography } from "@material-ui/core";
+import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
-import Moment from "react-moment";
-import { filterCountries } from "../../utils/helper";
 import SidebarList from "./SidebarList/SidebarList";
 import SidebarSearch from "./SidebarSearch/SidebarSearch";
 
@@ -24,13 +22,17 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.action.hover
   }
 }));
-const Sidebar = ({ lastUpdated, countries, setCoordinates }) => {
+const Sidebar = ({ countries, setCoordinates }) => {
   const [search, setSearch] = useState("");
   const [filteredCountries, setFilteredCases] = useState([]);
   const classes = useStyles();
 
   useEffect(() => {
-    setFilteredCases(filterCountries(countries, search));
+    setFilteredCases(
+      countries.filter(filteredCountry =>
+        filteredCountry.name.toLowerCase().includes(search.toLowerCase())
+      )
+    );
   }, [countries, setFilteredCases, search]);
 
   return (
@@ -44,19 +46,6 @@ const Sidebar = ({ lastUpdated, countries, setCoordinates }) => {
           filteredCountries={filteredCountries}
           setCoordinates={setCoordinates}
         />
-      </div>
-      <Divider />
-      <div>
-        {lastUpdated ? (
-          <div className={classes.Footer}>
-            <Container fixed>
-              <Typography variant="overline" wrap="nowrap">
-                Last update <br />
-                <Moment fromNow>{lastUpdated}</Moment>
-              </Typography>
-            </Container>
-          </div>
-        ) : null}
       </div>
     </React.Fragment>
   );

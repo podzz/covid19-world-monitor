@@ -1,14 +1,15 @@
-import { keyBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { default as countriesPolygon } from "../../assets/all-countries.json";
 import Map from "../../components/Map/Map";
 import SelectedCountryDialog from "../../components/SelectedCountryDialog/SelectedCountryDialog";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Spinner from "../../components/Spinner/Spinner";
-import { getCountryTimeseriesMapCases } from "../../redux/actions/countryTimeseries.actions";
 import { getMapCases } from "../../redux/actions/mapCases.actions";
-import { transformCountriesToMapData } from "../../utils/map-helper";
+import {
+  selectCountriesMapByFeatureId,
+  selectCountriesOrderedByCases
+} from "../../redux/selectors/mapCases.selector";
+import { getPolygonData } from "../../utils/map-helper";
 import Layout from "../Layout/Layout";
 
 const Dashboard = () => {
@@ -19,81 +20,36 @@ const Dashboard = () => {
   });
   const [getSelectedCountry, setSelectedCountry] = useState(null);
   const [getMapData, setMapData] = useState({});
-  const [getMapDataText, setMapDataText] = useState({});
 
-  const countries = useSelector(state => state.mapCases.countries);
-  const lastUpdated = useSelector(state => state.mapCases.lastUpdate);
+  const countries = useSelector(selectCountriesOrderedByCases);
+  const countriesMapByFeatureId = useSelector(selectCountriesMapByFeatureId);
   const loading = useSelector(state => state.mapCases.loading);
-  const timeseriesCountriesMap = useSelector(
-    state => state.countryTimeseries.timeseriesByCountry
-  );
 
   useEffect(() => {
     dispatch(getMapCases());
-    dispatch(getCountryTimeseriesMapCases());
   }, [dispatch]);
+
   const leftSideBar = (
-    <Sidebar
-      countries={countries}
-      lastUpdated={lastUpdated}
-      setCoordinates={setCoordinates}
-    ></Sidebar>
+    <Sidebar countries={countries} setCoordinates={setCoordinates}></Sidebar>
   );
 
   useEffect(() => {
-    if (countries.length > 0) {
-      const countryByAlpha3 = keyBy(countries, "code.alpha3");
-      countriesPolygon.features = countriesPolygon.features.reduce(
-        (result, feature) => {
-          if (countryByAlpha3[feature.properties.A3]) {
-            const newProperties = {
-              ...feature.properties,
-              ...countryByAlpha3[feature.properties.A3],
-              count: +countryByAlpha3[feature.properties.A3].cases.replace(
-                ",",
-                ""
-              ),
-              longitude: countryByAlpha3[feature.properties.A3].localisation.lo,
-              latitude: countryByAlpha3[feature.properties.A3].localisation.la
-            };
-            result.push({
-              ...feature,
-              properties: newProperties
-            });
-          }
-          return result;
-        },
-        []
-      );
-
-      setMapData(countriesPolygon);
-      setMapDataText(transformCountriesToMapData(countries));
-    }
-  }, [countries]);
+    setMapData(getPolygonData(countriesMapByFeatureId));
+  }, [countriesMapByFeatureId]);
 
   const onSelectCountry = useCallback(
     countrySelected => {
-      const timeseries = timeseriesCountriesMap[countrySelected.A3];
-      if (timeseries) {
-        setSelectedCountry({
-          country: {
-            ...countrySelected,
-            code: JSON.parse(countrySelected.code)
-          },
-          timeseries
-        });
-      }
+      setSelectedCountry(countrySelected);
     },
-    [setSelectedCountry, timeseriesCountriesMap]
+    [setSelectedCountry]
   );
 
   return (
     <React.Fragment>
-      <Layout leftSideBar={leftSideBar} lastUpdated={lastUpdated}>
+      <Layout leftSideBar={leftSideBar}>
         {Object.keys(getMapData).length > 0 ? (
           <Map
             mapData={getMapData}
-            mapDataText={getMapDataText}
             longitude={getCoordinates.longitude}
             latitude={getCoordinates.latitude}
             countrySelected={onSelectCountry}

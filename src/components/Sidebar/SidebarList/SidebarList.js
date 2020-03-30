@@ -6,7 +6,10 @@ import SidebarListClasses from "./SidebarList.module.css";
 
 const SidebarListItemRenderer = ({ index, data, style }) => {
   const { filteredCountries, setCoordinates } = data;
-  const country = filteredCountries[index];
+  const { state, lastCases, name, emoji, coordinates } = filteredCountries[
+    index
+  ];
+  const [longitude, latitude] = coordinates || [0, 0];
   return (
     <ListItem
       button
@@ -14,8 +17,8 @@ const SidebarListItemRenderer = ({ index, data, style }) => {
       style={style}
       onClick={() =>
         setCoordinates({
-          longitude: country.localisation.la,
-          latitude: country.localisation.lo
+          longitude,
+          latitude
         })
       }
     >
@@ -38,17 +41,15 @@ const SidebarListItemRenderer = ({ index, data, style }) => {
         >
           <Grid item>
             <Avatar>
-              <span className={SidebarListClasses.Flag}>
-                {country.code ? country.code.emoji : null}
-              </span>
+              <span className={SidebarListClasses.Flag}>{emoji}</span>
             </Avatar>
           </Grid>
           <Grid item>
-            <ListItemText primary={country.country_name} />
+            <ListItemText primary={`${name}${state ? ` - ${state}` : ""}`} />
           </Grid>
         </Grid>
         <Grid item>
-          <ListItemText secondary={country.cases} />
+          <ListItemText secondary={`${lastCases}`} />
         </Grid>
       </Grid>
     </ListItem>
