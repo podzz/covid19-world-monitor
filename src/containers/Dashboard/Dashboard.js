@@ -52,7 +52,9 @@ const Dashboard = () => {
               count: +countryByAlpha3[feature.properties.A3].cases.replace(
                 ",",
                 ""
-              )
+              ),
+              longitude: countryByAlpha3[feature.properties.A3].localisation.lo,
+              latitude: countryByAlpha3[feature.properties.A3].localisation.la
             };
             result.push({
               ...feature,
@@ -63,6 +65,7 @@ const Dashboard = () => {
         },
         []
       );
+
       setMapData(countriesPolygon);
       setMapDataText(transformCountriesToMapData(countries));
     }
