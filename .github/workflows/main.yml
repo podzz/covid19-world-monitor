@@ -31,12 +31,11 @@ jobs:
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
-        env:
+        with:
           PUBLIC_URL: /covid19-world-monitor
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REACT_APP_MapboxAccessToken: ${{ secrets.REACT_APP_MapboxAccessToken }}
           REACT_APP_CovidAPI_Key: ${{ secrets.REACT_APP_CovidAPI_Key }}
           REACT_APP_CovidApi_Host: ${{ secrets.REACT_APP_CovidApi_Host }}
           BRANCH: gh-pages
-          BASE_BRANCH: master
           FOLDER: build
