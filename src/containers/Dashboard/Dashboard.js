@@ -2,15 +2,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Map from "../../components/Map/Map";
 import SelectedCountryDialog from "../../components/SelectedCountryDialog/SelectedCountryDialog";
-import Sidebar from "../../components/Sidebar/Sidebar";
+import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 import Spinner from "../../components/Spinner/Spinner";
-import { getMapCases } from "../../redux/actions/mapCases.actions";
+import { getMapPolygons } from "../../redux/actions/mapPolygons.actions";
 import {
   selectCountriesMapByFeatureId,
   selectCountriesOrderedByCases
 } from "../../redux/selectors/mapCases.selector";
 import { getPolygonData } from "../../utils/map-helper";
 import Layout from "../Layout/Layout";
+import { selectMapPolygons } from "../../redux/selectors/mapPolygons.selector";
+import { getMapCases } from "../../redux/actions/mapCases.actions";
+import { isEmpty } from "lodash";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -22,20 +25,32 @@ const Dashboard = () => {
   const [getMapData, setMapData] = useState({});
 
   const countries = useSelector(selectCountriesOrderedByCases);
+  const mapPolygons = useSelector(selectMapPolygons);
   const countriesMapByFeatureId = useSelector(selectCountriesMapByFeatureId);
   const loading = useSelector(state => state.mapCases.loading);
 
   useEffect(() => {
-    dispatch(getMapCases());
+    dispatch(getMapPolygons());
   }, [dispatch]);
 
-  const leftSideBar = (
-    <Sidebar countries={countries} setCoordinates={setCoordinates}></Sidebar>
-  );
+  useEffect(() => {
+    if (!isEmpty(mapPolygons)) {
+      dispatch(getMapCases(mapPolygons));
+    }
+  }, [dispatch, mapPolygons]);
 
   useEffect(() => {
-    setMapData(getPolygonData(countriesMapByFeatureId));
-  }, [countriesMapByFeatureId]);
+    if (!isEmpty(mapPolygons)) {
+      setMapData(getPolygonData(countriesMapByFeatureId, mapPolygons));
+    }
+  }, [countriesMapByFeatureId, mapPolygons]);
+
+  const leftSideBar = (
+    <SidebarLeft
+      countries={countries}
+      setCoordinates={setCoordinates}
+    ></SidebarLeft>
+  );
 
   const onSelectCountry = useCallback(
     countrySelected => {
@@ -47,7 +62,7 @@ const Dashboard = () => {
   return (
     <React.Fragment>
       <Layout leftSideBar={leftSideBar}>
-        {Object.keys(getMapData).length > 0 ? (
+        {!isEmpty(getMapData) ? (
           <Map
             mapData={getMapData}
             longitude={getCoordinates.longitude}

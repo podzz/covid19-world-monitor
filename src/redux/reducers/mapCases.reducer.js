@@ -2,7 +2,6 @@ import { MapCasesActions } from "../actions/mapCases.actions";
 
 const initialState = {
   countries: [],
-  lastUpdate: null,
   error: null,
   loading: false
 };

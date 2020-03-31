@@ -92,8 +92,7 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
           </div>
 
           <div>
-            <b>Growth factor:</b>{" "}
-            {(hoveredFeature.properties.lastGrowthFactor * 100).toFixed(0)} %
+            <b>Growth factor:</b> {hoveredFeature.properties.lastGrowthFactor} %
           </div>
           <div className="tooltip-click">
             <b>

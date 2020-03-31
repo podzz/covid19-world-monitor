@@ -1,7 +1,7 @@
 import { CssBaseline, Drawer, Hidden } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -46,10 +46,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Layout = props => {
-  const { leftSideBar, children } = props;
+const Layout = ({ leftSideBar, rightSidebar, children }) => {
   const classes = useStyles();
-  const theme = useTheme();
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -79,9 +77,9 @@ const Layout = props => {
       <nav className={classes.drawer}>
         <Hidden smUp implementation="css">
           <Drawer
+            anchor="left"
             elevation={24}
             variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
             open={mobileOpen}
             onClose={handleDrawerToggle}
             classes={{
@@ -90,12 +88,16 @@ const Layout = props => {
             ModalProps={{
               keepMounted: true // Better open performance on mobile.
             }}
+            style={{
+              display: "flex"
+            }}
           >
             {leftSideBar}
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
           <Drawer
+            anchor="left"
             classes={{
               paper: classes.drawerPaper
             }}

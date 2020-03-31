@@ -4,8 +4,9 @@ export const MapCasesActions = {
   GET_MAP_CASES_FAILURE: "[MapCases] Get map cases failure"
 };
 
-export const getMapCases = () => ({
-  type: MapCasesActions.GET_MAP_CASES
+export const getMapCases = polygons => ({
+  type: MapCasesActions.GET_MAP_CASES,
+  polygons
 });
 
 export const getMapCasesSuccess = countries => ({

@@ -19,7 +19,6 @@ const CustomAreaChart = ({ dates }) => {
 
   useEffect(() => {
     const parsedDates = JSON.parse(dates);
-    // console.log(dates);
     setInitialChart(
       Object.keys(parsedDates).reduce((result, key) => {
         result.push({
@@ -33,7 +32,6 @@ const CustomAreaChart = ({ dates }) => {
   }, [dates, setInitialChart]);
 
   useEffect(() => {
-    console.log(getInitialChart);
     const differential = getInitialChart.map((dateData, i) => {
       if (i === 0) {
         return dateData;
@@ -54,7 +52,6 @@ const CustomAreaChart = ({ dates }) => {
             deaths
           };
     });
-    console.log(differential);
     setDifferential(differential);
   }, [getInitialChart, setDifferential]);
   return (

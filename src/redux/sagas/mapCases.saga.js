@@ -17,7 +17,7 @@ export function* getMapCasesSaga() {
       let { coordinates, dates, country } = data[key];
       if (!key.includes(",") && countries[country]) {
         const { name, emoji } = countries[country];
-        const { cases, deaths, tested, growthFactor } = dates[
+        let { cases, deaths, tested, growthFactor } = dates[
           last(
             sortBy(keys(dates), dateObj => {
               return new Date(dateObj);
@@ -29,6 +29,10 @@ export function* getMapCasesSaga() {
           coordinates = [-101.924137, 41.4831411];
         }
 
+        if (growthFactor) {
+          growthFactor = (growthFactor * 100).toFixed(0);
+        }
+
         result[key] = {
           ...data[key],
           name,
@@ -36,7 +40,7 @@ export function* getMapCasesSaga() {
           lastCases: cases || 0,
           lastDeaths: deaths || 0,
           lastTested: tested || 0,
-          lastGrowthFactor: growthFactor || 0,
+          lastGrowthFactor: growthFactor || 100,
           coordinates
         };
       }

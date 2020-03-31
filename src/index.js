@@ -8,8 +8,9 @@ import thunk from "redux-thunk";
 import App from "./App";
 import "./index.css";
 import { mapCasesReducer } from "./redux/reducers/mapCases.reducer";
-import { watchMapCases } from "./redux/sagas";
+import { watchMapCases, watchMapPolygons } from "./redux/sagas";
 import * as serviceWorker from "./serviceWorker";
+import { mapPolygonsReducer } from "./redux/reducers/mapPolygons.reducer";
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = applyMiddleware(thunk, sagaMiddleware);
@@ -20,12 +21,14 @@ const enhancers =
 
 const store = createStore(
   combineReducers({
-    mapCases: mapCasesReducer
+    mapCases: mapCasesReducer,
+    mapPolygons: mapPolygonsReducer
   }),
   enhancers
 );
 
 sagaMiddleware.run(watchMapCases);
+sagaMiddleware.run(watchMapPolygons);
 
 ReactDOM.render(
   <React.StrictMode>
