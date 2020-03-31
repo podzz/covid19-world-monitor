@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/covid19-world-monitor/static/css/main.e7f0f4f3.chunk.css",
+    "main.js": "/covid19-world-monitor/static/js/main.06ecf981.chunk.js",
+    "main.js.map": "/covid19-world-monitor/static/js/main.06ecf981.chunk.js.map",
+    "runtime-main.js": "/covid19-world-monitor/static/js/runtime-main.13d47124.js",
+    "runtime-main.js.map": "/covid19-world-monitor/static/js/runtime-main.13d47124.js.map",
+    "static/js/2.a7d3e665.chunk.js": "/covid19-world-monitor/static/js/2.a7d3e665.chunk.js",
+    "static/js/2.a7d3e665.chunk.js.map": "/covid19-world-monitor/static/js/2.a7d3e665.chunk.js.map",
+    "index.html": "/covid19-world-monitor/index.html",
+    "precache-manifest.86a68487bd9c12c843eef6a653b14052.js": "/covid19-world-monitor/precache-manifest.86a68487bd9c12c843eef6a653b14052.js",
+    "service-worker.js": "/covid19-world-monitor/service-worker.js",
+    "static/css/main.e7f0f4f3.chunk.css.map": "/covid19-world-monitor/static/css/main.e7f0f4f3.chunk.css.map",
+    "static/js/2.a7d3e665.chunk.js.LICENSE.txt": "/covid19-world-monitor/static/js/2.a7d3e665.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.13d47124.js",
+    "static/js/2.a7d3e665.chunk.js",
+    "static/css/main.e7f0f4f3.chunk.css",
+    "static/js/main.06ecf981.chunk.js"
+  ]
+}
