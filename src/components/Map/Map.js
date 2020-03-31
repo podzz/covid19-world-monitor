@@ -1,7 +1,7 @@
 import { Paper } from "@material-ui/core";
 import { first } from "lodash";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import ReactMapGL, { FlyToInterpolator, Layer, Source } from "react-map-gl";
+import MapGL, { FlyToInterpolator, Layer, Source } from "react-map-gl";
 import { clusterLayer } from "./layers";
 import "./Map.css";
 
@@ -16,7 +16,6 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
     x: 0,
     y: 0
   });
-  const [width, setWidth] = useState("100%");
 
   const _sourceRef = useRef();
 
@@ -47,10 +46,6 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
       goToViewport({ longitude, latitude });
     }
   }, [longitude, latitude, goToViewport]);
-
-  const onResizeHandler = useCallback(() => {
-    setWidth("100%");
-  }, [setWidth]);
 
   const onHover = useCallback(
     event => {
@@ -106,13 +101,12 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
 
   return (
     <div className="Map">
-      <ReactMapGL
-        width={width}
+      <MapGL
+        {...viewport}
+        width="100%"
         height="100%"
         mapStyle="mapbox://styles/mapbox/satellite-streets-v11"
-        {...viewport}
         onViewportChange={onViewportChange}
-        onResize={onResizeHandler}
         mapboxApiAccessToken={process.env.REACT_APP_MapboxAccessToken}
         interactiveLayerIds={[clusterLayer.id]}
         onHover={onHover}
@@ -122,7 +116,7 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
           <Layer {...clusterLayer} />
         </Source>
         {renderTooltip()}
-      </ReactMapGL>
+      </MapGL>
     </div>
   );
 };
