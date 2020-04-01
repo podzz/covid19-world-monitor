@@ -28,6 +28,11 @@ jobs:
         run: |
           yarn install --prefer-offline
           yarn build
+        env:
+          PUBLIC_URL: /covid19-world-monitor
+          REACT_APP_MapboxAccessToken: ${{ secrets.REACT_APP_MapboxAccessToken }}
+          REACT_APP_CovidAPI_Key: ${{ secrets.REACT_APP_CovidAPI_Key }}
+          REACT_APP_CovidApi_Host: ${{ secrets.REACT_APP_CovidApi_Host }}
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
@@ -35,8 +40,3 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: build
-        env:
-          PUBLIC_URL: /covid19-world-monitor
-          REACT_APP_MapboxAccessToken: ${{ secrets.REACT_APP_MapboxAccessToken }}
-          REACT_APP_CovidAPI_Key: ${{ secrets.REACT_APP_CovidAPI_Key }}
-          REACT_APP_CovidApi_Host: ${{ secrets.REACT_APP_CovidApi_Host }}
