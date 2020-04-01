@@ -1,10 +1,10 @@
 import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { sumBy } from "lodash";
 import React, { useEffect, useState } from "react";
+import CounterBlock from "../CounterBlock/CounterBlock";
 import SidebarLeftList from "./SidebarLeftList/SidebarLeftList";
 import SidebarSearch from "./SidebarSearch/SidebarSearch";
-import CounterBlock from "../CounterBlock/CounterBlock";
-import { sumBy } from "lodash";
 
 const useStyles = makeStyles(theme => ({
   Header: {
@@ -31,8 +31,10 @@ const SidebarLeft = ({ countries, setCoordinates }) => {
 
   useEffect(() => {
     setFilteredCases(
-      countries.filter(filteredCountry =>
-        filteredCountry.name.toLowerCase().includes(search.toLowerCase())
+      countries.filter(
+        filteredCountry =>
+          filteredCountry.name &&
+          filteredCountry.name.toLowerCase().includes(search.toLowerCase())
       )
     );
   }, [countries, setFilteredCases, search]);

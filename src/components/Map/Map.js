@@ -53,7 +53,12 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
         features,
         srcEvent: { offsetX, offsetY }
       } = event;
-      setTooltip({ hoveredFeature: first(features), x: offsetX, y: offsetY });
+      const findState = (features || []).filter(
+        feature => feature.properties.state
+      );
+      const hoveredFeature =
+        findState.length > 0 ? findState[0] : first(features);
+      setTooltip({ hoveredFeature, x: offsetX, y: offsetY });
     },
     [setTooltip]
   );
@@ -61,7 +66,11 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
   const onClick = useCallback(
     event => {
       const { features } = event;
-      const hoveredFeature = first(features);
+      const findState = (features || []).filter(
+        feature => feature.properties.state
+      );
+      const hoveredFeature =
+        findState.length > 0 ? findState[0] : first(features);
       if (hoveredFeature) {
         const { properties } = hoveredFeature;
         countrySelected(properties);
@@ -73,17 +82,38 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
   const renderTooltip = useCallback(() => {
     const { hoveredFeature, x, y } = tooltip;
 
-    return (
-      hoveredFeature && (
-        <Paper className="tooltip" style={{ left: x, top: y }}>
+    if (hoveredFeature) {
+      let stateOrCountry = (
+        <div>
+          <b>Country</b>: {hoveredFeature.properties.name}
+        </div>
+      );
+      if (hoveredFeature.properties.state) {
+        stateOrCountry = (
           <div>
-            <b>Country</b>: {hoveredFeature.properties.name}
+            <b>State</b>:{" "}
+            {hoveredFeature.properties.shortName ||
+              hoveredFeature.properties.county ||
+              hoveredFeature.properties.region ||
+              hoveredFeature.properties.state}
           </div>
+        );
+      }
+      return (
+        <Paper className="tooltip" style={{ left: x, top: y }}>
+          {stateOrCountry}
           <div>
             <b>Cases:</b> {hoveredFeature.properties.lastCases}
           </div>
           <div>
+            <b>Recovered:</b> {hoveredFeature.properties.lastRecovered}
+          </div>
+          <div>
             <b>Deaths:</b> {hoveredFeature.properties.lastDeaths}
+          </div>
+          <div>
+            <b>Population affected:</b>{" "}
+            {hoveredFeature.properties.casePercentPopulation * 100} %
           </div>
 
           <div>
@@ -95,8 +125,10 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
             </b>
           </div>
         </Paper>
-      )
-    );
+      );
+    }
+
+    return false;
   }, [tooltip]);
 
   return (
@@ -105,7 +137,7 @@ const Map = ({ mapData, longitude, latitude, countrySelected }) => {
         {...viewport}
         width="100%"
         height="100%"
-        mapStyle="mapbox://styles/mapbox/satellite-streets-v11"
+        mapStyle="mapbox://styles/flash11/ck8gwpkts0njw1ip6l2jked9v"
         onViewportChange={onViewportChange}
         mapboxApiAccessToken={process.env.REACT_APP_MapboxAccessToken}
         interactiveLayerIds={[clusterLayer.id]}

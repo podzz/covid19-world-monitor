@@ -1,19 +1,19 @@
+import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Map from "../../components/Map/Map";
 import SelectedCountryDialog from "../../components/SelectedCountryDialog/SelectedCountryDialog";
 import SidebarLeft from "../../components/Sidebar/SidebarLeft";
 import Spinner from "../../components/Spinner/Spinner";
+import { getMapCases } from "../../redux/actions/mapCases.actions";
 import { getMapPolygons } from "../../redux/actions/mapPolygons.actions";
 import {
   selectCountriesMapByFeatureId,
   selectCountriesOrderedByCases
 } from "../../redux/selectors/mapCases.selector";
+import { selectMapPolygons } from "../../redux/selectors/mapPolygons.selector";
 import { getPolygonData } from "../../utils/map-helper";
 import Layout from "../Layout/Layout";
-import { selectMapPolygons } from "../../redux/selectors/mapPolygons.selector";
-import { getMapCases } from "../../redux/actions/mapCases.actions";
-import { isEmpty } from "lodash";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -41,13 +41,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!isEmpty(mapPolygons)) {
-      setMapData(getPolygonData(countriesMapByFeatureId, mapPolygons));
+      setMapData(
+        getPolygonData(countries, countriesMapByFeatureId, mapPolygons)
+      );
     }
-  }, [countriesMapByFeatureId, mapPolygons]);
+  }, [countries, countriesMapByFeatureId, mapPolygons]);
 
   const leftSideBar = (
     <SidebarLeft
-      countries={countries}
+      countries={countries.filter(country => country.name && !country.state)}
       setCoordinates={setCoordinates}
     ></SidebarLeft>
   );
