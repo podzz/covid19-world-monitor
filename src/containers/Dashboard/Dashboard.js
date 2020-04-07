@@ -9,7 +9,7 @@ import { getMapCases } from "../../redux/actions/mapCases.actions";
 import { getMapPolygons } from "../../redux/actions/mapPolygons.actions";
 import {
   selectCountriesMapByFeatureId,
-  selectCountriesOrderedByCases
+  selectCountriesOrderedByCases,
 } from "../../redux/selectors/mapCases.selector";
 import { selectMapPolygons } from "../../redux/selectors/mapPolygons.selector";
 import { getPolygonData } from "../../utils/map-helper";
@@ -19,7 +19,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const [getCoordinates, setCoordinates] = useState({
     longitude: 2.2137,
-    latitude: 46.2276
+    latitude: 46.2276,
   });
   const [getSelectedCountry, setSelectedCountry] = useState(null);
   const [getMapData, setMapData] = useState({});
@@ -27,7 +27,7 @@ const Dashboard = () => {
   const countries = useSelector(selectCountriesOrderedByCases);
   const mapPolygons = useSelector(selectMapPolygons);
   const countriesMapByFeatureId = useSelector(selectCountriesMapByFeatureId);
-  const loading = useSelector(state => state.mapCases.loading);
+  const loading = useSelector((state) => state.mapCases.loading);
 
   useEffect(() => {
     dispatch(getMapPolygons());
@@ -49,13 +49,13 @@ const Dashboard = () => {
 
   const leftSideBar = (
     <SidebarLeft
-      countries={countries.filter(country => country.name && !country.state)}
+      countries={countries.filter((country) => country.name && !country.state)}
       setCoordinates={setCoordinates}
     ></SidebarLeft>
   );
 
   const onSelectCountry = useCallback(
-    countrySelected => {
+    (countrySelected) => {
       setSelectedCountry(countrySelected);
     },
     [setSelectedCountry]

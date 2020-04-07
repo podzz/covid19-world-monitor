@@ -15,14 +15,12 @@ import { mapPolygonsReducer } from "./redux/reducers/mapPolygons.reducer";
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = applyMiddleware(thunk, sagaMiddleware);
 const enhancers =
-  process.env.NODE_ENV === "development"
-    ? composeWithDevTools({})(middlewares)
-    : middlewares;
+  process.env.NODE_ENV === "development" ? middlewares : middlewares;
 
 const store = createStore(
   combineReducers({
     mapCases: mapCasesReducer,
-    mapPolygons: mapPolygonsReducer
+    mapPolygons: mapPolygonsReducer,
   }),
   enhancers
 );

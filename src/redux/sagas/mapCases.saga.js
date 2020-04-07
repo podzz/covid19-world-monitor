@@ -3,7 +3,7 @@ import { get, keys, sortBy } from "lodash";
 import { put } from "redux-saga/effects";
 import {
   getMapCasesFailure,
-  getMapCasesSuccess
+  getMapCasesSuccess,
 } from "../actions/mapCases.actions";
 
 export function* getMapCasesSaga() {
@@ -12,22 +12,22 @@ export function* getMapCasesSaga() {
       "https://coronadatascraper.com/timeseries-byLocation.json"
     );
     const data = yield response.json();
-
     const result = yield Object.keys(data).reduce((result, key) => {
-      let { coordinates, dates, country, population } = data[key];
-      const name = get(countries[country], "name");
-      const emoji = get(countries[country], "emoji");
+      let { coordinates, dates, countryId, population } = data[key];
+      const iso1 = countryId.split(":")[1];
+      const name = get(countries[iso1], "name");
+      const emoji = get(countries[iso1], "emoji");
       let lastGrowthFactor = 100;
       let lastCases = 0;
       let lastDeaths = 0;
       let lastTested = 0;
       let lastRecovered = 0;
 
-      let dateKeyArray = sortBy(keys(dates), dateObj => {
+      let dateKeyArray = sortBy(keys(dates), (dateObj) => {
         return new Date(dateObj);
       });
 
-      dateKeyArray.forEach(key => {
+      dateKeyArray.forEach((key) => {
         const date = dates[key];
         if (get(date, "tested")) {
           lastTested = date.tested;
@@ -64,7 +64,7 @@ export function* getMapCasesSaga() {
         lastGrowthFactor,
         lastRecovered,
         casePercentPopulation,
-        coordinates
+        coordinates,
       };
       return result;
     }, {});
